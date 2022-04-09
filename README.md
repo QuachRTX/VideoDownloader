@@ -15,6 +15,6 @@
 
 5º Aproveite! :D
 
-![Screens](https://imgur.com/a/09xUc3E "Screens")
+![Screens](https://i.imgur.com/L8j0MCx.png "Screens")
 
 <hr style="height: 10px;">
