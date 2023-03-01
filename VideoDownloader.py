@@ -1,59 +1,76 @@
 __author__ = "Quach"
-__version__ = "1.2"
+__version__ = "1.5"
 __status__ = "development"
 __email__ = "quach.vrc@gmail.com"
 __github__ = "https://github.com/QuachRTX"
 
 import os
+import sys
+import pyfiglet
 from pathlib import Path
 from pytube import YouTube
 from pytube.cli import on_progress
 
-#text_end = '\033[38;2;255;00;31m'
-#text_titles = '\033[38;1;255;00;92m'
-#text_download = '\033[38;2;255;00;255m'   #  color as hex #FF00FF
-#reset_color = '\033[39m'
+VIDEO_DIR = os.path.join(os.environ['UserProfile'], 'Desktop', 'VideoDownloader', 'Videos')
+AUDIO_DIR = os.path.join(os.environ['UserProfile'], 'Desktop', 'VideoDownloader', 'Audios')
 
-print("############# VIDEO DOWNLOADER #############\n")
+def download_video(url):
+    try:
+        my_video = YouTube(url, on_progress_callback=on_progress).streams.get_highest_resolution()
+        Path(VIDEO_DIR).mkdir(parents=True, exist_ok=True)
+        my_video.download(VIDEO_DIR)
+        print("\nDownload completo!")
+    except:
+        print("\nFalha ao baixar o vídeo. Certifique-se de que a URL está correta e tente novamente.")
+        sys.exit()
 
-print("Digite a URL do video...")
-url = input()
-my_video = YouTube(url, on_progress_callback=on_progress)
+def download_audio(url):
+    try:
+        my_video = YouTube(url, on_progress_callback=on_progress).streams.get_audio_only()
+        Path(AUDIO_DIR).mkdir(parents=True, exist_ok=True)
+        my_video.download(AUDIO_DIR)
+        print("\nDownload completo!")
+    except:
+        print("\nFalha ao baixar o áudio. Certifique-se de que a URL está correta e tente novamente.")
+        sys.exit()
 
-print("\nDigite 1 para efetuar o download do video")
-print("Digite 2 para efetuar o download do audio")
-escolha = int(input())
+def print_video_info(video):
+    try:
+        print("\n*********** Título do vídeo ***********")
+        print(video.title)
+        print("\n*********** Thumbnail ***********")
+        print(video.thumbnail_url)
+    except:
+        print("\nFalha ao carregar o título e/ou thumbnail do vídeo.")
 
-print("\n*********** Titulo do Video ***********")
-print(my_video.title,"\n")
+def main():
+    title = pyfiglet.figlet_format("VideoDownloader 1.5", font="slant", width=100)
+    print(title)
 
-print("*********** Thumbnail ***********")
-print(my_video.thumbnail_url,"\n")
+    print("Digite a URL do vídeo...")
+    url = input()
 
-if escolha == 1:
+    try:
+        video = YouTube(url, on_progress_callback=on_progress)
+        print_video_info(video)
+    except:
+        print("\nFalha ao carregar o vídeo. Certifique-se de que a URL está correta e tente novamente.")
+        sys.exit()
 
-    print("*********** Download Video ***********")
-    print("Downloading...")
+    print("\nDigite 'v' para baixar o vídeo, 'a' para baixar o áudio ou 's' para sair...")
+    download_type = input()
 
-    my_video = my_video.streams.get_highest_resolution() 
-    
-    Path(f"{os.environ['UserProfile']}\Desktop\VideoDownloader\Videos").mkdir(parents=True, exist_ok=True)
-    my_video.download(f"{os.environ['UserProfile']}\Desktop\VideoDownloader\Videos")
+    if download_type == 's' or download_type == 'S':
+        sys.exit()
+    elif download_type == 'v' or download_type == 'V':
+        download_video(url)
+    elif download_type == 'a' or download_type == 'A':
+        download_audio(url)
+    else:
+        print("\nOpção inválida. Tente novamente.")
+        main()
 
-    print("\nDownload completo!")
-elif escolha == 2:
 
-    print("*********** Download Audio ***********")
-    print("Downloading...")
-
-    my_video = my_video.streams.get_audio_only()
-
-    Path(f"{os.environ['UserProfile']}\Desktop\VideoDownloader\Audios").mkdir(parents=True, exist_ok=True)
-    my_video.download(f"{os.environ['UserProfile']}\Desktop\VideoDownloader\Audios")
-
-    print("\nDownload completo!")
-else:
-    print("Valor invalido!\n")
-
-print("Pressione qualquer tecla para terminar..")
-input()
+if __name__ == '__main__':
+    main()
+ 
