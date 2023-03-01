@@ -3,7 +3,7 @@ Este é um simples programa em Python que permite o download de vídeos ou áudi
 
 
 # Funcionalidades
-1. Baixa vídeos em alta resolução (720p, 480p, 360p)
+1. Baixa vídeos em 720p
 2. Baixa somente o áudio do vídeo
 3. Salva os downloads em pastas separadas na área de trabalho do usuário
 
